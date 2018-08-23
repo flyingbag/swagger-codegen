@@ -216,6 +216,15 @@ public class DartClientCodegen extends DefaultCodegen implements CodegenConfig {
 
     @Override
     public String toVarName(String name) {
+        // if it's all lower case, do nothing
+        if (name.matches("^[a-z_]*$")) {
+            if (isReservedWord(name)) {
+                name = escapeReservedWord(name);
+            }
+    
+            return name;
+        }
+
         // replace - with _ e.g. created-at => created_at
         name = name.replaceAll("-", "_"); // FIXME: a parameter should not be assigned. Also declare the methods parameters as 'final'.
 
