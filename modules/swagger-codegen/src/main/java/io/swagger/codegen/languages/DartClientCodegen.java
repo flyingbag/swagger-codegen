@@ -22,11 +22,13 @@ import java.util.Map;
 
 public class DartClientCodegen extends DefaultCodegen implements CodegenConfig {
     public static final String BROWSER_CLIENT = "browserClient";
+    public static final String BLOC = "bloc";
     public static final String PUB_NAME = "pubName";
     public static final String PUB_VERSION = "pubVersion";
     public static final String PUB_DESCRIPTION = "pubDescription";
     public static final String USE_ENUM_EXTENSION = "useEnumExtension";
     protected boolean browserClient = true;
+    protected boolean bloc = false;
     protected String pubName = "swagger";
     protected String pubVersion = "1.0.0";
     protected String pubDescription = "Swagger API client";
@@ -102,6 +104,7 @@ public class DartClientCodegen extends DefaultCodegen implements CodegenConfig {
         typeMapping.put("binary", "String");
 
         cliOptions.add(new CliOption(BROWSER_CLIENT, "Is the client browser based"));
+        cliOptions.add(new CliOption(BLOC, "Include BLoC implementation"));
         cliOptions.add(new CliOption(PUB_NAME, "Name in generated pubspec"));
         cliOptions.add(new CliOption(PUB_VERSION, "Version in generated pubspec"));
         cliOptions.add(new CliOption(PUB_DESCRIPTION, "Description in generated pubspec"));
@@ -133,6 +136,13 @@ public class DartClientCodegen extends DefaultCodegen implements CodegenConfig {
         } else {
             //not set, use to be passed to template
             additionalProperties.put(BROWSER_CLIENT, browserClient);
+        }
+
+        if (additionalProperties.containsKey(BLOC)) {
+            this.setBLoC(convertPropertyToBooleanAndWriteBack(BLOC));
+        } else {
+            //not set, use to be passed to template
+            additionalProperties.put(BLOC, bloc);
         }
 
         if (additionalProperties.containsKey(PUB_NAME)) {
@@ -442,6 +452,10 @@ public class DartClientCodegen extends DefaultCodegen implements CodegenConfig {
 
     public void setBrowserClient(boolean browserClient) {
         this.browserClient = browserClient;
+    }
+
+    public void setBLoC(boolean bloc) {
+        this.bloc = bloc;
     }
 
     public void setPubName(String pubName) {

@@ -102,4 +102,55 @@ class {{classname}} {
   }
   {{/operation}}
 }
+
+{{#bloc}}
+class {{classname}}Bloc {
+  final {{classname}} api;
+
+  {{classname}}Bloc([{{classname}} api]) : this.api = api;
+
+  {{#operation}}
+  final _send_{{nickname}} = StreamController<Null>();
+  {{/operation}}
+
+  {{#operation}}
+  final _sending_{{nickname}} = BehaviorSubject<bool>(seedValue: false);
+  {{/operation}}
+
+  // sinks
+  {{#operation}}
+  void Function() get send_{{nickname}} => () => _send_{{nickname}}.add(null);
+  {{/operation}}
+
+  // streams
+  {{#operation}}
+  Stream<bool> get sending_{{nickname}} => _sending_{{nickname}}.stream.distinct();
+  {{/operation}}
+
+  {{#operation}}
+  {{#returnType}}Stream<{{{returnType}}}> {{/returnType}}{{^returnType}}Stream {{/returnType}} results_{{nickname}};
+  {{/operation}}
+
+  {{#operation}}
+  /// {{summary}}
+  ///
+  /// {{notes}}
+  void {{nickname}}({{#allParams}}{{#required}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/required}}{{/allParams}}{{#hasOptionalParams}}{ {{#allParams}}{{^required}}{{{dataType}}} {{paramName}}{{#hasMore}}, {{/hasMore}}{{/required}}{{/allParams}} }{{/hasOptionalParams}}) {
+    results_{{nickname}} = Observable(_send_{{nickname}}.stream)
+      .flatMap(
+        (_) => Observable
+          .fromFuture(api.{{nickname}}({{#allParams}}{{#required}}{{paramName}}{{#hasMore}}, {{/hasMore}}{{/required}}{{/allParams}}{{#hasOptionalParams}}{{#allParams}}{{^required}}{{paramName}}: {{paramName}}{{#hasMore}}, {{/hasMore}}{{/required}}{{/allParams}}{{/hasOptionalParams}}))
+          .doOnListen(() => _sending_{{nickname}}.add(true))
+          .doOnEach((_) => _sending_{{nickname}}.add(false)),
+      );
+  }
+  {{/operation}}
+  dispose() {
+  {{#operation}}
+    _sending_{{nickname}}.close();
+    _send_{{nickname}}.close();
+  {{/operation}}
+  }
+}
+{{/bloc}}
 {{/operations}}

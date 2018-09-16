@@ -30,6 +30,8 @@ public class DartClientOptionsTest extends AbstractOptionsTest {
             times = 1;
             clientCodegen.setBrowserClient(Boolean.valueOf(DartClientOptionsProvider.BROWSER_CLIENT_VALUE));
             times = 1;
+            clientCodegen.setBLoC(Boolean.valueOf(DartClientOptionsProvider.BLOC_VALUE));
+            times = 1;
             clientCodegen.setPubName(DartClientOptionsProvider.PUB_NAME_VALUE);
             times = 1;
             clientCodegen.setPubVersion(DartClientOptionsProvider.PUB_VERSION_VALUE);
