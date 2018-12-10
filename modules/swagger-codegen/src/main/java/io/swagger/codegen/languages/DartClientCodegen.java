@@ -102,6 +102,7 @@ public class DartClientCodegen extends DefaultCodegen implements CodegenConfig {
         //TODO binary should be mapped to byte array
         // mapped to String as a workaround
         typeMapping.put("binary", "String");
+        typeMapping.put("ByteArray", "String");
 
         cliOptions.add(new CliOption(BROWSER_CLIENT, "Is the client browser based"));
         cliOptions.add(new CliOption(BLOC, "Include BLoC implementation"));
